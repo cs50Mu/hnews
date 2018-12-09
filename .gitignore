@@ -1,4 +1,5 @@
 *.py[cod]
 *$py.class
+*.swp
 .env/
 __pycache__/
