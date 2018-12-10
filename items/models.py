@@ -12,9 +12,9 @@ class Item(models.Model):
     url = models.URLField(verbose_name='链接')
     source = models.CharField(max_length=255, verbose_name='来源')
     creator = models.ForeignKey(User, related_name='items', verbose_name='创建者')
-    points = models.IntegerField(verbose_name='评分')
+#    points = models.IntegerField(verbose_name='评分')
     voters = models.ManyToManyField(User, through='ItemUpVote', verbose_name='投票者')
-    hidden = models.BooleanField(verbose_name='是否隐藏')
+#    hidden = models.BooleanField(verbose_name='是否隐藏')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
