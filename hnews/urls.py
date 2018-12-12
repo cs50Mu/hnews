@@ -18,5 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url('^posts/', include('items.urls'))
+    # namespaced URLs
+    # ref: https://docs.djangoproject.com/en/1.11/topics/http/urls/#id4
+    url(r'^items/', include('items.urls', namespace='items'))
 ]

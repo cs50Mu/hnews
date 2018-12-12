@@ -3,7 +3,7 @@
         {% if items %}
         <ul>
             {% for item in items %}
-                <li>{{ item.title }} </li>
+            <li>{{ item.title }} - {{ item.how_long_ago }} - {{ item.get_domain_name }}</li>
             {% endfor %}
         </ul>
         {% endif %}
