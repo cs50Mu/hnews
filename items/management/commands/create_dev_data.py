@@ -33,16 +33,13 @@ class Command(BaseCommand):
         tesla, _ = Item.objects.get_or_create(
                 title="Tesla's giant battery saved $40M during its first year, report says'",
                 url="https://electrek.co/2018/12/06/tesla-battery-report/",
-                source='visalist.io',
                 creator=tom)
         jira, _ = Item.objects.get_or_create(
                 title="JIRA is an antipattern",
                 url="https://techcrunch.com/2018/12/09/jira-is-an-antipattern/",
-                source="techcrunch.com",
                 creator=mary)
         coinbase, _ = Item.objects.get_or_create(
                 title="Coinbase Abandons Cautious Approach with Plan to List Up to 30 New Currencies",
                 url="https://techcrunch.com/2018/12/07/coinbase-dabbles-in-shitcoins/",
-                source="techcrunch.com",
                 creator=mike)
         self.stdout.write(self.style.SUCCESS('Successfully created dev data'))

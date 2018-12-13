@@ -29,7 +29,7 @@ class Item(models.Model):
                 ItemUpVote.objects.create(voter=user, item=self)
         else:
             if is_exist:
-                self.voters.filter(id=user.id).delete()
+                q.delete()
 
     def how_long_ago(self):
         now = timezone.now()
@@ -75,7 +75,7 @@ class Comment(models.Model):
                 CommentUpVote.objects.create(voter=user, comment=self)
         else:
             if is_exist:
-                self.voters.filter(id=user.id).delete()
+                q.delete()
 
 
 class CommentUpVote(models.Model):
