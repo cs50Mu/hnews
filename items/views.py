@@ -6,10 +6,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.urls import reverse
 
-from items.models import Item
+from items.models import Item, Comment
+from items.forms import CommentForm
 
 # Create your views here.
 
@@ -22,14 +23,7 @@ class ItemListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ItemListView, self).get_context_data(**kwargs)
         context['items'] = json.dumps([
-            {
-                'title': item.title,
-                'how_long_ago': item.how_long_ago(),
-                'domain_name': item.get_domain_name(),
-                'upvoted':
-                item.voters.filter(id=self.request.user.id).count() > 0,
-                'upvote_url': reverse('items:item-set-upvote', kwargs={'item_id': item.id}),
-                }
+            item.to_dict(self.request.user)
             for item in context['items']
             ])
         return context
@@ -45,3 +39,40 @@ def item_set_upvote(request, item_id):
     upvote = data['upvote']
     item.set_upvote_flag(request.user, upvote)
     return HttpResponse(status=204)
+
+@require_POST
+@login_required
+def comment_set_upvote(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, KeyError):
+        return HttpResponseBadRequest()
+    upvote = data['upvote']
+    comment.set_upvote_flag(request.user, upvote)
+    return HttpResponse(status=204)
+
+class CommentCreateView(CreateView):
+    template_name = 'items/create.html'
+    form_class = CommentForm
+
+    def post(self, request, *args, **kwargs):
+        return login_required(super(CreateView, self).post)(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentCreateView, self).get_context_data(**kwargs)
+        context['item_json'] = json.dumps(
+                self.item.to_dict(self.request.user))
+        context['item'] = self.item
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        self.item = get_object_or_404(Item, id=kwargs['item_id'])
+        return super(CommentCreateView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.creator = self.request.user
+        obj.item = self.item
+        obj.save()
+        return self.render_to_response(self.get_context_data())

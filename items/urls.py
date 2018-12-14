@@ -6,4 +6,5 @@ app_name = 'items'
 urlpatterns = [
         url(r'^$', views.ItemListView.as_view(), name='list'),
         url(r'^(?P<item_id>\d+)/set_upvote/?$', views.item_set_upvote, name='item-set-upvote'),
+        url(r'^(?P<item_id>\d+)/?$', views.CommentCreateView.as_view(), name='comment'),
         ]
