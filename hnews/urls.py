@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-from items.views import comment_set_upvote
+from items.views import comment_set_upvote, comment_add_reply
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^items/', include('items.urls', namespace='items')),
     url(r'^accounts/login/$', auth_views.LoginView.as_view(), name='login'),
     url(r'^accounts/logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    url(r'^comments/(?P<comment_id>\d+)/set_upvote', comment_set_upvote, name='comment-set-upvote')
+    url(r'^comments/(?P<comment_id>\d+)/set_upvote', comment_set_upvote, name='comment-set-upvote'),
+    url(r'^comments/(?P<comment_id>\d+)/add_reply', comment_add_reply, name='comment-add_reply'),
 ]

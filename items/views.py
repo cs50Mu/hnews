@@ -42,6 +42,21 @@ def item_set_upvote(request, item_id):
 
 @require_POST
 @login_required
+def comment_add_reply(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, KeyError):
+        return HttpResponseBadRequest()
+    comment = Comment(parent=comment,
+            item=comment.item,
+            content=data['content'],
+            creator=request.user)
+    comment.save()
+    return HttpResponse(status=204)
+
+@require_POST
+@login_required
 def comment_set_upvote(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     try:

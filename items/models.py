@@ -60,7 +60,7 @@ class Item(models.Model, HowLongAgoMixin):
                 'upvoted':
                 self.voters.filter(id=user.id).count() > 0,
                 'upvote_url': reverse('items:item-set-upvote', kwargs={'item_id': self.id}),
-                'comments': [comment.to_dict(user) for comment in self.comments.all()],
+                'comments': [comment.to_dict(user) for comment in self.comments.filter(parent__isnull=True)],
                 }
 
     class Meta:
@@ -98,6 +98,11 @@ class Comment(models.Model, HowLongAgoMixin):
                 'upvoted':
                 self.voters.filter(id=user.id).count() > 0,
                 'upvote_url': reverse('comment-set-upvote', kwargs={'comment_id': self.id}),
+                'comment_url': reverse('comment-add_reply', kwargs={'comment_id': self.id}),
+                'replies': [
+                    reply.to_dict(user)
+                    for reply in self.replies.all()
+                    ]
                 }
 
 
