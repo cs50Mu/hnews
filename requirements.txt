@@ -1,0 +1,6 @@
+Django==1.11.17
+django-extensions==2.1.4
+ipython==5.8.0
+mock==2.0.0
+pytest==4.0.1
+pytest-django==3.4.4
